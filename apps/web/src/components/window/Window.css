@@ -8,13 +8,54 @@
 	overflow: hidden;
 	height: 100%;
 	outline: none;
-	transition: border-color 0.2s, box-shadow 0.2s;
+	transition: all 0.3s ease-out, width 0.3s ease-out, height 0.3s ease-out, transform 0.3s ease-out,
+		grid-column 0.3s ease-out, grid-row 0.3s ease-out, visibility 0s linear 0s;
+	transform-origin: center;
+	animation: windowAppear 0.3s ease-out;
+}
+
+@keyframes windowAppear {
+	0% {
+		transform: scale(0.85);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 .window.minimized {
 	position: absolute;
 	visibility: hidden;
 	pointer-events: none;
+	opacity: 0;
+	transform: scale(0.7) translateY(30px);
+	transition: all 0.25s ease-in, visibility 0s linear 0.25s;
+}
+
+.window.maximized {
+	position: fixed !important;
+	top: 0;
+	left: 0;
+	width: 100vw !important;
+	height: calc(100vh - 24px) !important;
+	z-index: 999;
+	border-radius: 0;
+	grid-column: unset !important;
+	grid-row: unset !important;
+	animation: maximizeWindow 0.3s ease-out;
+}
+
+@keyframes maximizeWindow {
+	0% {
+		transform: scale(0.9);
+		opacity: 0.7;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 .window.focused {
@@ -50,11 +91,17 @@
 	display: inline-block;
 	border: none;
 	cursor: pointer;
-	transition: opacity 0.2s;
+	transition: all 0.2s ease;
+	transform: scale(1);
 }
 
 .window-button:hover {
 	opacity: 0.8;
+	transform: scale(1.2);
+}
+
+.window-button:active {
+	transform: scale(0.9);
 }
 
 .window-button.close {

@@ -6,11 +6,13 @@ import { KEYBIND_NEW_WINDOW, KEYBIND_CLOSE_WINDOW } from './constants';
 import './App.css';
 import type { ReactNode } from 'react';
 import StatusBar from './components/statusBar/StatusBar';
+import Toast from './components/toast/Toast';
 
 export interface WindowItem {
 	id: string;
 	title: string;
 	minimized?: boolean;
+	maximized?: boolean;
 	component: ReactNode;
 }
 
@@ -19,6 +21,34 @@ function AppContent() {
 		{ id: crypto.randomUUID(), title: 'Terminal', component: <TerminalUI /> },
 	]);
 	const [focusedWindow, setFocusedWindow] = useState<string | undefined>(windows[0]?.id || undefined);
+	const [showFullscreenToast, setShowFullscreenToast] = useState(false);
+
+	// Check if fullscreen on mount
+	useEffect(() => {
+		const checkFullscreen = () => {
+			const isFullScreenAPI = Boolean(
+				document.fullscreenElement ||
+					(document as any).webkitFullscreenElement ||
+					(document as any).mozFullScreenElement ||
+					(document as any).msFullscreenElement
+			);
+
+			// Also check window dimensions (F11 fullscreen)
+			const isFullScreenWindow =
+				window.innerHeight === window.screen.height && window.innerWidth === window.screen.width;
+
+			return isFullScreenAPI || isFullScreenWindow;
+		};
+
+		// Small delay to ensure page is fully loaded
+		const timer = setTimeout(() => {
+			if (!checkFullscreen()) {
+				setShowFullscreenToast(true);
+			}
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, []);
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,6 +105,21 @@ function AppContent() {
 		setWindows((prev) => prev.map((w) => (w.id === id ? { ...w, minimized } : w)));
 	};
 
+	const setWindowMaximized = (id: string, maximized: boolean = true) => {
+		setWindows((prev) =>
+			prev.map((w) => {
+				// If maximizing this window, un-maximize all others
+				if (w.id === id) {
+					return { ...w, maximized };
+				} else if (maximized) {
+					// Un-maximize other windows when one is maximized
+					return { ...w, maximized: false };
+				}
+				return w;
+			})
+		);
+	};
+
 	return (
 		<>
 			<div id="desktop">
@@ -89,6 +134,8 @@ function AppContent() {
 							closeWindow={closeWindow}
 							minimized={win.minimized}
 							setWindowMinimized={setWindowMinimized}
+							maximized={win.maximized}
+							setWindowMaximized={setWindowMaximized}
 						>
 							{win.component}
 						</Window>
@@ -99,8 +146,16 @@ function AppContent() {
 				setFocusedWindow={setFocusedWindow}
 				focusedWindow={focusedWindow}
 				setWindowMinimized={setWindowMinimized}
+				setWindowMaximized={setWindowMaximized}
 				windows={windows}
 			/>
+			{showFullscreenToast && (
+				<Toast
+					message="For the best experience, press F11 to enter fullscreen mode"
+					onClose={() => setShowFullscreenToast(false)}
+					duration={8000}
+				/>
+			)}
 		</>
 	);
 }

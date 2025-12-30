@@ -29,18 +29,27 @@
 	color: #eee;
 	font-size: 12px;
 	cursor: pointer;
-	transition: background-color 0.2s;
+	transition: all 0.2s ease;
+	transform: scale(1);
 }
 
 .status-bar-task-item:hover {
 	background-color: rgba(0, 200, 255, 0.5);
+	transform: translateY(-2px);
+	box-shadow: 0 2px 6px rgba(0, 200, 255, 0.4);
+}
+
+.status-bar-task-item:active {
+	transform: scale(0.95);
 }
 
 .status-bar-task-item.minimized {
-	opacity: 0.6;
+	opacity: 0.55;
+	transform: scale(0.92);
 }
 
 .status-bar-task-item.focused {
 	background-color: rgba(0, 200, 255, 0.8);
 	border-color: rgba(0, 200, 255, 0.9);
+	box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
 }

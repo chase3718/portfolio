@@ -5,11 +5,18 @@ import Clock from './widgets/clock';
 export type StatusBarProps = {
 	windows: Array<WindowItem>;
 	setWindowMinimized: (id: string, minimized: boolean) => void;
+	setWindowMaximized: (id: string, maximized: boolean) => void;
 	setFocusedWindow: (id: string | undefined) => void;
 	focusedWindow?: string;
 };
 
-export default function StatusBar({ windows, setWindowMinimized, focusedWindow, setFocusedWindow }: StatusBarProps) {
+export default function StatusBar({
+	windows,
+	setWindowMinimized,
+	setWindowMaximized,
+	focusedWindow,
+	setFocusedWindow,
+}: StatusBarProps) {
 	return (
 		<div id="status-bar">
 			Status Bar
@@ -22,6 +29,12 @@ export default function StatusBar({ windows, setWindowMinimized, focusedWindow, 
 							win.id === focusedWindow ? 'focused' : ''
 						}`}
 						onClick={() => {
+							// Un-maximize any maximized windows
+							const maximizedWindow = windows.find((w) => w.maximized);
+							if (maximizedWindow) {
+								setWindowMaximized(maximizedWindow.id, false);
+							}
+
 							if (win.id !== focusedWindow) {
 								if (win.minimized) {
 									setWindowMinimized(win.id, false);
