@@ -89,6 +89,7 @@ export class Terminal {
 					'  mv <from> <to>         - Move/rename file or directory',
 					'  cp <from> <to>         - Copy a file',
 					'  stat <path>            - Show file/directory information',
+					'  reset                  - Clear terminal (same as clear)',
 					'  sudo reset --confirm   - Clear filesystem and reload',
 					'',
 					'Examples:',
