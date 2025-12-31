@@ -93,10 +93,19 @@ export class Terminal {
 					'  sudo reset --confirm   - Clear filesystem and reload',
 					'',
 					'Examples:',
-					'  mkdir /docs',
-					'  echo "Hello World" > /docs/hello.txt',
-					'  cat /docs/hello.txt',
-					'  tree /docs',
+					'	open /home/welcome.txt',
+					'	edit /etc/theme.css',
+					'	cd /home',
+					'	ls',
+					'	tree /',
+					'	mkdir /home/new_folder',
+					'	echo "Hello, World!" > /home/hello.txt',
+					'	cat /home/hello.txt',
+					'	mv /home/hello.txt /home/greetings.txt',
+					'	cp /home/greetings.txt /home/copy_of_greetings.txt',
+					'	stat /home/greetings.txt',
+					'',
+					'For more information, visit the documentation.',
 				].join('\n')
 			);
 		});
